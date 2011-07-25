@@ -2,8 +2,6 @@ from trac.core import *
 from trac.config import Option
 from trac.env import IEnvironmentSetupParticipant
 from trac.perm import PermissionCache
-from trac.resource import ResourceNotFound
-from trac.ticket import Ticket
 from trac.ticket import notification as ticketnotification
 
 smtp_public_always_cc = None
@@ -23,7 +21,7 @@ def get_recipients(self, tktid):
 
     (to, cc) = saved_get_recipients(self, tktid)
 
-    # Can ticket be viewed by the anonymous user?
+    # Can ticket be viewed by an anonymous user?
     if 'TICKET_VIEW' in PermissionCache(self.env, None, self.ticket.resource):
         always_cc = smtp_public_always_cc and build_addresses(smtp_public_always_cc.replace(',', ' ').split()) or []
 
@@ -33,7 +31,7 @@ def get_recipients(self, tktid):
 
     return (to, cc)
 
-class NotificationOptOut(Component):
+class PublicNotifications(Component):
     """
     This component allows to define CC address(es) used only for public tickets notifications.
     """
